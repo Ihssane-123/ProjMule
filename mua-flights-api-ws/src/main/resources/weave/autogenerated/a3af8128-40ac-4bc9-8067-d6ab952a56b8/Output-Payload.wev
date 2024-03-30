@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_a3af8128_40ac_4bc9_8067_d6ab952a56b8_Output_Payload = Array<{|  airline: String,   flightCode: String,   fromAirportCode: String,   toAirportCode: String,   departureDate: String,   emptySeats: Number {"typeId": "int"},   totalSeats: Number {"typeId": "int"},   price: Number {"typeId": "int"},   planeType: String|}> | Null
+

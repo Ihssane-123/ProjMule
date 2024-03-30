@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<db:config name="MySQLTrainingDatabase_Config" doc:name="Database Config" doc:id="1b7f0eab-cdb8-4c0b-bd8a-6f367083f9d7" >
+		<db:my-sql-connection host="iltdb.mule-training.com" port="3306" user="mule" password="mule" database="training" />
+	</db:config>
+	<flow name="GetFlights" doc:id="6466871d-32b9-46dd-83c9-edb7e5f902c8" >
+		<db:select doc:name="Select" doc:id="e0075c95-10db-4d97-835b-666a9d8d5342" config-ref="MySQLTrainingDatabase_Config">
+			<db:sql ><![CDATA[SELECT * FROM american]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="609f9b01-d212-41aa-9ae1-45ab29061c99" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	plane: {
+		"type": payload01.planeType,
+		totalSeats: payload01.totalSeats
+	},
+	price: payload01.price default 0,
+	origin: payload01.fromAirport default "",
+	destination: payload01.toAirport default "",
+	ID: payload01.ID,
+	emptySeats: payload01.seatsAvailable default 0
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="GetFlightsById" doc:id="6a3a93d6-27ed-4ab0-834a-969f2077811a" >
+		<db:select doc:name="Select" doc:id="4c031f9e-0c30-49d7-b6f4-fc14a5982aee" config-ref="MySQLTrainingDatabase_Config" >
+			<db:sql ><![CDATA[SELECT * FROM american WHERE ID = :my_id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+my_id: vars.id
+
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="4383984c-09a8-47b2-b308-ba5d4deba5d3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	plane: {
+		"type": payload01.planeType,
+		totalSeats: payload01.totalSeats
+	},
+	price: payload01.price default 0,
+	origin: payload01.fromAirport default "",
+	destination: payload01.toAirport default "",
+	ID: payload01.ID,
+	emptySeats: payload01.seatsAvailable default 0
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
