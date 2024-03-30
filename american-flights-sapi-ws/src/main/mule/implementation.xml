@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<db:config name="MySQLTrainingDatabase_Config" doc:name="Database Config" doc:id="1b7f0eab-cdb8-4c0b-bd8a-6f367083f9d7" >
 		<db:my-sql-connection host="iltdb.mule-training.com" port="3306" user="mule" password="mule" database="training" />
 	</db:config>
@@ -30,6 +31,9 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+	</flow>
+	<flow name="implementationFlow" doc:id="6cf8cdc8-6f4b-4e0c-a01b-c8baa0ed80e0" >
+		<http:listener doc:name="Listener" doc:id="cf76e610-b563-4f1e-8ba6-fbaea8d3fc85" config-ref="american-flights-sapi-httpListenerConfig"/>
 	</flow>
 	<flow name="GetFlightsById" doc:id="6a3a93d6-27ed-4ab0-834a-969f2077811a" >
 		<db:select doc:name="Select" doc:id="4c031f9e-0c30-49d7-b6f4-fc14a5982aee" config-ref="MySQLTrainingDatabase_Config" >
